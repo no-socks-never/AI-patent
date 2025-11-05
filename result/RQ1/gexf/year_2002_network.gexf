@@ -1,0 +1,249 @@
+<?xml version='1.0' encoding='utf-8'?>
+<gexf xmlns="http://www.gexf.net/1.2draft" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.gexf.net/1.2draft http://www.gexf.net/1.2draft/gexf.xsd" version="1.2">
+  <meta lastmodifieddate="2025-10-31">
+    <creator>NetworkX 3.2.1</creator>
+  </meta>
+  <graph defaultedgetype="directed" mode="static" name="">
+    <nodes>
+      <node id="DSPC以色列有限公司" label="DSPC以色列有限公司" />
+      <node id="E·G·纽曼; G·S·克里斯琴M·D·詹金斯" label="E·G·纽曼; G·S·克里斯琴M·D·詹金斯" />
+      <node id="RTO控股有限公司" label="RTO控股有限公司" />
+      <node id="R·艾伦·尼利; 因沃斯林克公司" label="R·艾伦·尼利; 因沃斯林克公司" />
+      <node id="三洋电机株式会社" label="三洋电机株式会社" />
+      <node id="三菱国际有限公司" label="三菱国际有限公司" />
+      <node id="三菱电机株式会社" label="三菱电机株式会社" />
+      <node id="中国中文信息学会" label="中国中文信息学会" />
+      <node id="丹福斯有限公司" label="丹福斯有限公司" />
+      <node id="伊诺瓦特尔公司" label="伊诺瓦特尔公司" />
+      <node id="凯斯、施勒和韦斯公司" label="凯斯、施勒和韦斯公司" />
+      <node id="刘中华; 叶新林" label="刘中华; 叶新林" />
+      <node id="北京慧讯信息技术有限公司" label="北京慧讯信息技术有限公司" />
+      <node id="北京视频方特科技开发有限公司" label="北京视频方特科技开发有限公司" />
+      <node id="周隆珊" label="周隆珊" />
+      <node id="四川佩协实业公司" label="四川佩协实业公司" />
+      <node id="媒体数位网络体系公司" label="媒体数位网络体系公司" />
+      <node id="宏碁电脑股份有限公司" label="宏碁电脑股份有限公司" />
+      <node id="宏碁电脑股份有限公司; 杨智科技股份有限公司" label="宏碁电脑股份有限公司; 杨智科技股份有限公司" />
+      <node id="巨龙信息技术有限责任公司" label="巨龙信息技术有限责任公司" />
+      <node id="希尔德科股份有限公司" label="希尔德科股份有限公司" />
+      <node id="常促宇" label="常促宇" />
+      <node id="张丁懋; 詹至为" label="张丁懋; 詹至为" />
+      <node id="徐玉麟" label="徐玉麟" />
+      <node id="敦晖科技股份有限公司" label="敦晖科技股份有限公司" />
+      <node id="斯蒂芬·塞茨; 西洛·韦格尔迪特马·赖特" label="斯蒂芬·塞茨; 西洛·韦格尔迪特马·赖特" />
+      <node id="新泻精密株式会社; 株式会社流畅研究所" label="新泻精密株式会社; 株式会社流畅研究所" />
+      <node id="日本电气株式会社" label="日本电气株式会社" />
+      <node id="旭丽股份有限公司" label="旭丽股份有限公司" />
+      <node id="明碁电脑股份有限公司" label="明碁电脑股份有限公司" />
+      <node id="权基澈" label="权基澈" />
+      <node id="李埈瑞; 李京录" label="李埈瑞; 李京录" />
+      <node id="杭州宏软计算机通信技术有限公司" label="杭州宏软计算机通信技术有限公司" />
+      <node id="杭州富通集团有限公司; 杭州富通通信技术股份有限公司; 住电光纤光缆(深圳)有限公司" label="杭州富通集团有限公司; 杭州富通通信技术股份有限公司; 住电光纤光缆(深圳)有限公司" />
+      <node id="株式会社东芝; 硅图像有限公司; MIPS技术公司; 跨线桥有限责任公司" label="株式会社东芝; 硅图像有限公司; MIPS技术公司; 跨线桥有限责任公司" />
+      <node id="株式会社奥普特罗姆" label="株式会社奥普特罗姆" />
+      <node id="株式会社数码显示实验室" label="株式会社数码显示实验室" />
+      <node id="株式会社新世纪通信" label="株式会社新世纪通信" />
+      <node id="株式会社次世代情报放送系统研究所; 株式会社理光" label="株式会社次世代情报放送系统研究所; 株式会社理光" />
+      <node id="桑纳拉斯麦脱信托有限公司; 德国捷德有限公司; 斯麦脱信托系统有限公司" label="桑纳拉斯麦脱信托有限公司; 德国捷德有限公司; 斯麦脱信托系统有限公司" />
+      <node id="毛远青" label="毛远青" />
+      <node id="汉斯·鲁道夫·斯特灵" label="汉斯·鲁道夫·斯特灵" />
+      <node id="汤姆森信息服务公司" label="汤姆森信息服务公司" />
+      <node id="汤姆森消费电子有限公司" label="汤姆森消费电子有限公司" />
+      <node id="海门科技国际公司" label="海门科技国际公司" />
+      <node id="深圳市中兴通讯股份有限公司上海第二研究所" label="深圳市中兴通讯股份有限公司上海第二研究所" />
+      <node id="深圳市艾柯电子有限公司" label="深圳市艾柯电子有限公司" />
+      <node id="爱尔斯戴尔有限公司" label="爱尔斯戴尔有限公司" />
+      <node id="王凌霄; 科胜讯系统有限责任公司; 克雷格·巴兰克张荣峰; 扎尔林克半导体V.N.股份有限公司; 莱克斯坦塞米有限公司" label="王凌霄; 科胜讯系统有限责任公司; 克雷格·巴兰克张荣峰; 扎尔林克半导体V.N.股份有限公司; 莱克斯坦塞米有限公司" />
+      <node id="王海鹰" label="王海鹰" />
+      <node id="王陆一" label="王陆一" />
+      <node id="现代电子产业株式会社" label="现代电子产业株式会社" />
+      <node id="瑞士电信公司; 瑞士电信(瑞士)股份公司; 瑞士电信流动电话公司" label="瑞士电信公司; 瑞士电信(瑞士)股份公司; 瑞士电信流动电话公司" />
+      <node id="电力技术革新股份公司" label="电力技术革新股份公司" />
+      <node id="皮图西界面株式会社" label="皮图西界面株式会社" />
+      <node id="真实立体公司" label="真实立体公司" />
+      <node id="硅图像有限公司; MIPS技术公司; 株式会社东芝; 跨线桥有限责任公司" label="硅图像有限公司; MIPS技术公司; 株式会社东芝; 跨线桥有限责任公司" />
+      <node id="硅图像有限公司株式会社东芝; 跨线桥有限责任公司; 株式会社东芝; MIPS技术公司" label="硅图像有限公司株式会社东芝; 跨线桥有限责任公司; 株式会社东芝; MIPS技术公司" />
+      <node id="索尼株式会社" label="索尼株式会社" />
+      <node id="约瑟夫·L·比莱利亚" label="约瑟夫·L·比莱利亚" />
+      <node id="线上丝路图书股份有限公司" label="线上丝路图书股份有限公司" />
+      <node id="腾研科技股份有限公司" label="腾研科技股份有限公司" />
+      <node id="艾伦·芬克尔斯坦" label="艾伦·芬克尔斯坦" />
+      <node id="英国吉尔福德郡欧洲佳能有限公司; 欧洲佳能研究中心有限公司" label="英国吉尔福德郡欧洲佳能有限公司; 欧洲佳能研究中心有限公司" />
+      <node id="西北工业大学; 湖州奥利金高性能计算技术有限公司" label="西北工业大学; 湖州奥利金高性能计算技术有限公司" />
+      <node id="西门子公司" label="西门子公司" />
+      <node id="诺尔股份有限公司" label="诺尔股份有限公司" />
+      <node id="迅利科技股份有限公司" label="迅利科技股份有限公司" />
+      <node id="通讯软件有限公司" label="通讯软件有限公司" />
+      <node id="郑光均" label="郑光均" />
+      <node id="长春鸿达信息技术有限公司" label="长春鸿达信息技术有限公司" />
+      <node id="陈克炯; 陈翠微陈春晖贺淑贞" label="陈克炯; 陈翠微陈春晖贺淑贞" />
+      <node id="陶氏化学公司" label="陶氏化学公司" />
+      <node id="香港科技大学" label="香港科技大学" />
+      <node id="马广岭; 穆念强" label="马广岭; 穆念强" />
+      <node id="DSPC技术有限公司" label="DSPC技术有限公司" />
+      <node id="齐伯瑙特有限公司" label="齐伯瑙特有限公司" />
+      <node id="普拉斯服装有限公司" label="普拉斯服装有限公司" />
+      <node id="因沃斯林克公司; BCE爱莫基斯技术公司" label="因沃斯林克公司; BCE爱莫基斯技术公司" />
+      <node id="富士电机株式会社" label="富士电机株式会社" />
+      <node id="IP2H股份公司" label="IP2H股份公司" />
+      <node id="恩益禧三菱电机视讯有限公司" label="恩益禧三菱电机视讯有限公司" />
+      <node id="华绍和陶沙肖金卯程女范蒋顺炳" label="华绍和陶沙肖金卯程女范蒋顺炳" />
+      <node id="陶沙肖金卯程女范蒋顺炳; 华绍和" label="陶沙肖金卯程女范蒋顺炳; 华绍和" />
+      <node id="丹福斯海运系统公司" label="丹福斯海运系统公司" />
+      <node id="塞格特尔集团有限公司" label="塞格特尔集团有限公司" />
+      <node id="马克罗证券研究有限公司" label="马克罗证券研究有限公司" />
+      <node id="北京青谷科技有限公司" label="北京青谷科技有限公司" />
+      <node id="北京普天慧讯信息技术有限公司" label="北京普天慧讯信息技术有限公司" />
+      <node id="北京瀚华凯捷技术开发有限公司" label="北京瀚华凯捷技术开发有限公司" />
+      <node id="周长俊" label="周长俊" />
+      <node id="四川中城网络发展股份有限公司" label="四川中城网络发展股份有限公司" />
+      <node id="马克罗韦森公司" label="马克罗韦森公司" />
+      <node id="宏碁电脑股份有限公司; 纬创资通股份有限公司" label="宏碁电脑股份有限公司; 纬创资通股份有限公司" />
+      <node id="宏碁股份有限公司; 纬创资通股份有限公司" label="宏碁股份有限公司; 纬创资通股份有限公司" />
+      <node id="宏碁股份有限公司纬创资通股份有限公司" label="宏碁股份有限公司纬创资通股份有限公司" />
+      <node id="纬创资通股份有限公司; 宏碁电脑股份有限公司" label="纬创资通股份有限公司; 宏碁电脑股份有限公司" />
+      <node id="纬创资通股份有限公司; 宏碁股份有限公司" label="纬创资通股份有限公司; 宏碁股份有限公司" />
+      <node id="纬创资通股份有限公司; 宏碁股份有限公司杨智科技股份有限公司" label="纬创资通股份有限公司; 宏碁股份有限公司杨智科技股份有限公司" />
+      <node id="北京亿阳巨龙智能网技术有限公司" label="北京亿阳巨龙智能网技术有限公司" />
+      <node id="霍尼维尔股份有限公司" label="霍尼维尔股份有限公司" />
+      <node id="北京先锋博创科技发展有限公司" label="北京先锋博创科技发展有限公司" />
+      <node id="詹至为" label="詹至为" />
+      <node id="徐玉麟郑开颜邓伟强; 郑开颜邓伟强; 徐玉麟" label="徐玉麟郑开颜邓伟强; 郑开颜邓伟强; 徐玉麟" />
+      <node id="敦南科技股份有限公司" label="敦南科技股份有限公司" />
+      <node id="斯坎诺瓦有限责任公司" label="斯坎诺瓦有限责任公司" />
+      <node id="新泻精密株式会社" label="新泻精密株式会社" />
+      <node id="NEC化合物半导体器件株式会社" label="NEC化合物半导体器件株式会社" />
+      <node id="日本电气英富醍公司" label="日本电气英富醍公司" />
+      <node id="闳晖实业股份有限公司" label="闳晖实业股份有限公司" />
+      <node id="达方电子股份有限公司" label="达方电子股份有限公司" />
+      <node id="株式会社内奥德; 权基澈" label="株式会社内奥德; 权基澈" />
+      <node id="戴特尼克斯有限公司" label="戴特尼克斯有限公司" />
+      <node id="王强宇" label="王强宇" />
+      <node id="杭州富通昭和光通信股份有限公司; 住电光纤光缆(深圳)有限公司; 杭州富通通信技术股份有限公司" label="杭州富通昭和光通信股份有限公司; 住电光纤光缆(深圳)有限公司; 杭州富通通信技术股份有限公司" />
+      <node id="株式会社东芝; MIPS技术公司; 跨线桥有限责任公司; ARM海外金融有限公司" label="株式会社东芝; MIPS技术公司; 跨线桥有限责任公司; ARM海外金融有限公司" />
+      <node id="金世纪国际有限公司" label="金世纪国际有限公司" />
+      <node id="数字菓子付梓公司前川和義" label="数字菓子付梓公司前川和義" />
+      <node id="SK泰力康姆株式会社" label="SK泰力康姆株式会社" />
+      <node id="株式会社理光" label="株式会社理光" />
+      <node id="斯麦脱信托系统有限公司; 捷佳德移动安全有限公司; 德国捷德有限公司" label="斯麦脱信托系统有限公司; 捷佳德移动安全有限公司; 德国捷德有限公司" />
+      <node id="钟民" label="钟民" />
+      <node id="伊塞特切有限公司" label="伊塞特切有限公司" />
+      <node id="奥姆杰奥有限公司" label="奥姆杰奥有限公司" />
+      <node id="开放电视公司" label="开放电视公司" />
+      <node id="西加特科技有限责任公司" label="西加特科技有限责任公司" />
+      <node id="深圳市中兴通讯股份有限公司" label="深圳市中兴通讯股份有限公司" />
+      <node id="深圳市华阳微电子有限公司" label="深圳市华阳微电子有限公司" />
+      <node id="英瓦尔·瓦格纳" label="英瓦尔·瓦格纳" />
+      <node id="扎尔林克半导体V.N.股份有限公司; 西纳铁克斯股份有限公司; 科胜讯系统公司" label="扎尔林克半导体V.N.股份有限公司; 西纳铁克斯股份有限公司; 科胜讯系统公司" />
+      <node id="王小芹" label="王小芹" />
+      <node id="西安秦川三和信息工程发展有限公司" label="西安秦川三和信息工程发展有限公司" />
+      <node id="易美可株式会社" label="易美可株式会社" />
+      <node id="瑞士电信流动电话公司; 瑞士电信公司; 瑞士电信固网公司" label="瑞士电信流动电话公司; 瑞士电信公司; 瑞士电信固网公司" />
+      <node id="OVD基尼格拉姆股份公司" label="OVD基尼格拉姆股份公司" />
+      <node id="BtoC美国股份有限公司" label="BtoC美国股份有限公司" />
+      <node id="英特尔公司" label="英特尔公司" />
+      <node id="MIPS技术公司; 跨线桥有限责任公司; 株式会社东芝; ARM海外金融有限公司" label="MIPS技术公司; 跨线桥有限责任公司; 株式会社东芝; ARM海外金融有限公司" />
+      <node id="MIPS技术公司株式会社东芝; ARM海外金融有限公司; 株式会社东芝; 跨线桥有限责任公司" label="MIPS技术公司株式会社东芝; ARM海外金融有限公司; 株式会社东芝; 跨线桥有限责任公司" />
+      <node id="索尼通讯网络股份有限公司" label="索尼通讯网络股份有限公司" />
+      <node id="维克闯公司" label="维克闯公司" />
+      <node id="普世印务技术开发股份有限公司" label="普世印务技术开发股份有限公司" />
+      <node id="群鼎视讯科技股份有限公司" label="群鼎视讯科技股份有限公司" />
+      <node id="蓝思卡特有限公司" label="蓝思卡特有限公司" />
+      <node id="卡农株式会社" label="卡农株式会社" />
+      <node id="湖州奥利金高性能计算机技术有限公司; 杭州奥利金并行计算技术有限公司" label="湖州奥利金高性能计算机技术有限公司; 杭州奥利金并行计算技术有限公司" />
+      <node id="因菲尼奥恩技术股份公司" label="因菲尼奥恩技术股份公司" />
+      <node id="诺尔起重机系统有限公司" label="诺尔起重机系统有限公司" />
+      <node id="厦门资盛科技发展有限公司" label="厦门资盛科技发展有限公司" />
+      <node id="美商·惠普公司" label="美商·惠普公司" />
+      <node id="哈特默尔网络有限公司; 阿莱斯弗勒尔有限公司" label="哈特默尔网络有限公司; 阿莱斯弗勒尔有限公司" />
+      <node id="长春鸿达高技术集团有限公司" label="长春鸿达高技术集团有限公司" />
+      <node id="陈克炯" label="陈克炯" />
+      <node id="陶氏环球技术公司" label="陶氏环球技术公司" />
+      <node id="袁铭辉; 王昌凌郑家杰" label="袁铭辉; 王昌凌郑家杰" />
+      <node id="马广岭" label="马广岭" />
+    </nodes>
+    <edges>
+      <edge source="DSPC以色列有限公司" target="DSPC技术有限公司" id="0" weight="2" />
+      <edge source="E·G·纽曼; G·S·克里斯琴M·D·詹金斯" target="齐伯瑙特有限公司" id="1" weight="2" />
+      <edge source="RTO控股有限公司" target="普拉斯服装有限公司" id="2" weight="2" />
+      <edge source="R·艾伦·尼利; 因沃斯林克公司" target="因沃斯林克公司; BCE爱莫基斯技术公司" id="3" weight="1" />
+      <edge source="三洋电机株式会社" target="富士电机株式会社" id="4" weight="1" />
+      <edge source="三菱国际有限公司" target="IP2H股份公司" id="5" weight="2" />
+      <edge source="三菱电机株式会社" target="恩益禧三菱电机视讯有限公司" id="6" weight="2" />
+      <edge source="中国中文信息学会" target="华绍和陶沙肖金卯程女范蒋顺炳" id="7" weight="2" />
+      <edge source="中国中文信息学会" target="陶沙肖金卯程女范蒋顺炳; 华绍和" id="8" weight="2" />
+      <edge source="丹福斯有限公司" target="丹福斯海运系统公司" id="9" weight="2" />
+      <edge source="伊诺瓦特尔公司" target="塞格特尔集团有限公司" id="10" weight="1" />
+      <edge source="凯斯、施勒和韦斯公司" target="马克罗证券研究有限公司" id="11" weight="1" />
+      <edge source="刘中华; 叶新林" target="北京青谷科技有限公司" id="12" weight="1" />
+      <edge source="北京慧讯信息技术有限公司" target="北京普天慧讯信息技术有限公司" id="13" weight="1" />
+      <edge source="北京视频方特科技开发有限公司" target="北京瀚华凯捷技术开发有限公司" id="14" weight="2" />
+      <edge source="周隆珊" target="周长俊" id="15" weight="1" />
+      <edge source="四川佩协实业公司" target="四川中城网络发展股份有限公司" id="16" weight="2" />
+      <edge source="媒体数位网络体系公司" target="马克罗韦森公司" id="17" weight="2" />
+      <edge source="宏碁电脑股份有限公司" target="宏碁电脑股份有限公司; 纬创资通股份有限公司" id="18" weight="3" />
+      <edge source="宏碁电脑股份有限公司" target="宏碁股份有限公司; 纬创资通股份有限公司" id="19" weight="34" />
+      <edge source="宏碁电脑股份有限公司" target="宏碁股份有限公司纬创资通股份有限公司" id="20" weight="20" />
+      <edge source="宏碁电脑股份有限公司" target="纬创资通股份有限公司; 宏碁电脑股份有限公司" id="21" weight="1" />
+      <edge source="宏碁电脑股份有限公司" target="纬创资通股份有限公司; 宏碁股份有限公司" id="22" weight="43" />
+      <edge source="宏碁电脑股份有限公司; 杨智科技股份有限公司" target="纬创资通股份有限公司; 宏碁股份有限公司杨智科技股份有限公司" id="23" weight="2" />
+      <edge source="巨龙信息技术有限责任公司" target="北京亿阳巨龙智能网技术有限公司" id="24" weight="8" />
+      <edge source="希尔德科股份有限公司" target="霍尼维尔股份有限公司" id="25" weight="4" />
+      <edge source="常促宇" target="北京先锋博创科技发展有限公司" id="26" weight="1" />
+      <edge source="张丁懋; 詹至为" target="詹至为" id="27" weight="1" />
+      <edge source="徐玉麟" target="徐玉麟郑开颜邓伟强; 郑开颜邓伟强; 徐玉麟" id="28" weight="1" />
+      <edge source="敦晖科技股份有限公司" target="敦南科技股份有限公司" id="29" weight="2" />
+      <edge source="斯蒂芬·塞茨; 西洛·韦格尔迪特马·赖特" target="斯坎诺瓦有限责任公司" id="30" weight="1" />
+      <edge source="新泻精密株式会社; 株式会社流畅研究所" target="新泻精密株式会社" id="31" weight="2" />
+      <edge source="日本电气株式会社" target="NEC化合物半导体器件株式会社" id="32" weight="4" />
+      <edge source="日本电气株式会社" target="日本电气英富醍公司" id="33" weight="1" />
+      <edge source="旭丽股份有限公司" target="闳晖实业股份有限公司" id="34" weight="2" />
+      <edge source="明碁电脑股份有限公司" target="达方电子股份有限公司" id="35" weight="2" />
+      <edge source="权基澈" target="株式会社内奥德; 权基澈" id="36" weight="1" />
+      <edge source="李埈瑞; 李京录" target="戴特尼克斯有限公司" id="37" weight="1" />
+      <edge source="杭州宏软计算机通信技术有限公司" target="王强宇" id="38" weight="1" />
+      <edge source="杭州富通集团有限公司; 杭州富通通信技术股份有限公司; 住电光纤光缆(深圳)有限公司" target="杭州富通昭和光通信股份有限公司; 住电光纤光缆(深圳)有限公司; 杭州富通通信技术股份有限公司" id="39" weight="2" />
+      <edge source="株式会社东芝; 硅图像有限公司; MIPS技术公司; 跨线桥有限责任公司" target="株式会社东芝; MIPS技术公司; 跨线桥有限责任公司; ARM海外金融有限公司" id="40" weight="2" />
+      <edge source="株式会社奥普特罗姆" target="金世纪国际有限公司" id="41" weight="2" />
+      <edge source="株式会社数码显示实验室" target="数字菓子付梓公司前川和義" id="42" weight="2" />
+      <edge source="株式会社新世纪通信" target="SK泰力康姆株式会社" id="43" weight="2" />
+      <edge source="株式会社次世代情报放送系统研究所; 株式会社理光" target="株式会社理光" id="44" weight="2" />
+      <edge source="桑纳拉斯麦脱信托有限公司; 德国捷德有限公司; 斯麦脱信托系统有限公司" target="斯麦脱信托系统有限公司; 捷佳德移动安全有限公司; 德国捷德有限公司" id="45" weight="2" />
+      <edge source="毛远青" target="钟民" id="46" weight="1" />
+      <edge source="汉斯·鲁道夫·斯特灵" target="伊塞特切有限公司" id="47" weight="1" />
+      <edge source="汤姆森信息服务公司" target="奥姆杰奥有限公司" id="48" weight="1" />
+      <edge source="汤姆森消费电子有限公司" target="开放电视公司" id="49" weight="2" />
+      <edge source="海门科技国际公司" target="西加特科技有限责任公司" id="50" weight="1" />
+      <edge source="深圳市中兴通讯股份有限公司上海第二研究所" target="深圳市中兴通讯股份有限公司" id="51" weight="2" />
+      <edge source="深圳市艾柯电子有限公司" target="深圳市华阳微电子有限公司" id="52" weight="2" />
+      <edge source="爱尔斯戴尔有限公司" target="英瓦尔·瓦格纳" id="53" weight="1" />
+      <edge source="王凌霄; 科胜讯系统有限责任公司; 克雷格·巴兰克张荣峰; 扎尔林克半导体V.N.股份有限公司; 莱克斯坦塞米有限公司" target="扎尔林克半导体V.N.股份有限公司; 西纳铁克斯股份有限公司; 科胜讯系统公司" id="54" weight="2" />
+      <edge source="王海鹰" target="王小芹" id="55" weight="1" />
+      <edge source="王陆一" target="西安秦川三和信息工程发展有限公司" id="56" weight="3" />
+      <edge source="现代电子产业株式会社" target="易美可株式会社" id="57" weight="2" />
+      <edge source="瑞士电信公司; 瑞士电信(瑞士)股份公司; 瑞士电信流动电话公司" target="瑞士电信流动电话公司; 瑞士电信公司; 瑞士电信固网公司" id="58" weight="1" />
+      <edge source="电力技术革新股份公司" target="OVD基尼格拉姆股份公司" id="59" weight="2" />
+      <edge source="皮图西界面株式会社" target="BtoC美国股份有限公司" id="60" weight="1" />
+      <edge source="真实立体公司" target="英特尔公司" id="61" weight="2" />
+      <edge source="硅图像有限公司; MIPS技术公司; 株式会社东芝; 跨线桥有限责任公司" target="MIPS技术公司; 跨线桥有限责任公司; 株式会社东芝; ARM海外金融有限公司" id="62" weight="2" />
+      <edge source="硅图像有限公司株式会社东芝; 跨线桥有限责任公司; 株式会社东芝; MIPS技术公司" target="MIPS技术公司株式会社东芝; ARM海外金融有限公司; 株式会社东芝; 跨线桥有限责任公司" id="63" weight="2" />
+      <edge source="索尼株式会社" target="索尼通讯网络股份有限公司" id="64" weight="4" />
+      <edge source="约瑟夫·L·比莱利亚" target="维克闯公司" id="65" weight="2" />
+      <edge source="线上丝路图书股份有限公司" target="普世印务技术开发股份有限公司" id="66" weight="1" />
+      <edge source="腾研科技股份有限公司" target="群鼎视讯科技股份有限公司" id="67" weight="2" />
+      <edge source="艾伦·芬克尔斯坦" target="蓝思卡特有限公司" id="68" weight="1" />
+      <edge source="英国吉尔福德郡欧洲佳能有限公司; 欧洲佳能研究中心有限公司" target="卡农株式会社" id="69" weight="2" />
+      <edge source="西北工业大学; 湖州奥利金高性能计算技术有限公司" target="湖州奥利金高性能计算机技术有限公司; 杭州奥利金并行计算技术有限公司" id="70" weight="2" />
+      <edge source="西门子公司" target="因菲尼奥恩技术股份公司" id="71" weight="2" />
+      <edge source="诺尔股份有限公司" target="诺尔起重机系统有限公司" id="72" weight="1" />
+      <edge source="迅利科技股份有限公司" target="厦门资盛科技发展有限公司" id="73" weight="2" />
+      <edge source="通讯软件有限公司" target="美商·惠普公司" id="74" weight="1" />
+      <edge source="郑光均" target="哈特默尔网络有限公司; 阿莱斯弗勒尔有限公司" id="75" weight="1" />
+      <edge source="长春鸿达信息技术有限公司" target="长春鸿达高技术集团有限公司" id="76" weight="1" />
+      <edge source="陈克炯; 陈翠微陈春晖贺淑贞" target="陈克炯" id="77" weight="2" />
+      <edge source="陶氏化学公司" target="陶氏环球技术公司" id="78" weight="1" />
+      <edge source="香港科技大学" target="袁铭辉; 王昌凌郑家杰" id="79" weight="1" />
+      <edge source="马广岭; 穆念强" target="马广岭" id="80" weight="2" />
+    </edges>
+  </graph>
+</gexf>
