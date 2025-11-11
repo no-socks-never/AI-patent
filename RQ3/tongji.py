@@ -1,8 +1,20 @@
+import os
+# 设置matplotlib配置目录（解决权限问题）
+os.environ['MPLCONFIGDIR'] = os.path.join(os.getcwd(), '.matplotlib_cache')
+os.makedirs(os.environ['MPLCONFIGDIR'], exist_ok=True)
+
 import pandas as pd
 import numpy as np
-import os
+import matplotlib
+matplotlib.use('Agg')  # 使用非交互式后端
 import matplotlib.pyplot as plt
 import seaborn as sns
+import warnings
+
+# 导入跨平台字体配置
+import sys
+sys.path.insert(0, os.path.dirname(os.path.dirname(__file__)))
+from font_config import setup_chinese_fonts, get_font_dict
 
 # --------------------------
 # 配置参数（固定路径）
@@ -11,11 +23,11 @@ data_dir = "./data"
 result_root = "./result/RQ3"
 os.makedirs(result_root, exist_ok=True)
 
-# 中文显示设置
-plt.rcParams["font.family"] = ["SimHei", "WenQuanYi Micro Hei", "Heiti TC"]
-plt.rcParams["axes.unicode_minus"] = False
-title_font = {"fontsize": 14, "fontweight": "bold"}
-label_font = {"fontsize": 12}
+# 自动配置中文字体（支持 Windows/macOS/Linux）
+setup_chinese_fonts()
+font_dicts = get_font_dict()
+title_font = font_dicts['title_font']
+label_font = font_dicts['label_font']
 
 # --------------------------
 # 核心：数据统计汇总
@@ -23,12 +35,32 @@ label_font = {"fontsize": 12}
 def data_summary():
     # 1. 加载数据
     print("=== 步骤1：加载数据 ===")
-    excel_path = os.path.join(data_dir, "AI_patent_data2001-2024.xlsx")
-    if not os.path.exists(excel_path):
-        raise FileNotFoundError(f"数据文件不存在：{excel_path}")
     
-    # 读取所有列（仅用于统计，不筛选）
-    df = pd.read_excel(excel_path, engine="openpyxl")
+    # 读取data目录下所有Excel文件
+    excel_files = [f for f in os.listdir(data_dir) if f.endswith('.xlsx') and not f.startswith('~$')]
+    if not excel_files:
+        raise FileNotFoundError(f"数据目录不存在Excel文件：{data_dir}")
+    
+    print(f"发现{len(excel_files)}个Excel文件，开始合并...")
+    
+    # 读取并合并所有Excel文件
+    dfs = []
+    for file in sorted(excel_files):
+        file_path = os.path.join(data_dir, file)
+        try:
+            temp_df = pd.read_excel(file_path, engine="openpyxl")
+            dfs.append(temp_df)
+            print(f"  已读取：{file}，记录数：{len(temp_df)}")
+        except Exception as e:
+            print(f"  警告：文件{file}读取失败：{str(e)}")
+            continue
+    
+    if not dfs:
+        raise ValueError("没有成功读取任何Excel文件")
+    
+    # 合并所有数据
+    df = pd.concat(dfs, ignore_index=True)
+    print(f"成功合并所有文件，总记录数：{len(df)}")
     print(f"原始数据总行数：{len(df)}")
     print(f"原始数据总列数：{len(df.columns)}")
     print(f"\n所有列名：\n{list(df.columns)}")
@@ -162,46 +194,46 @@ def data_summary():
     vis_dir = os.path.join(result_root, "统计图表")
     os.makedirs(vis_dir, exist_ok=True)
     
-    # （1）年度转让趋势图
+    # (1) Annual Transfer Trend
     if "转让生效年份" in df.columns:
         year_counts = df["转让生效年份"].dropna().astype(int).value_counts().sort_index()
         plt.figure(figsize=(12, 6))
         year_counts.plot(kind="line", marker="o", color="#2ecc71")
-        plt.title("年度专利转让次数趋势", fontdict=title_font)
-        plt.xlabel("年份", fontdict=label_font)
-        plt.ylabel("转让次数", fontdict=label_font)
+        plt.title("Annual Patent Transfer Trend", fontdict=title_font)
+        plt.xlabel("Year", fontdict=label_font)
+        plt.ylabel("Transfer Count", fontdict=label_font)
         plt.grid(True, alpha=0.3)
         plt.tight_layout()
-        plt.savefig(os.path.join(vis_dir, "年度转让趋势.png"), dpi=300)
+        plt.savefig(os.path.join(vis_dir, "annual_transfer_trend.png"), dpi=300)
         plt.close()
-        print("  ✅ 年度转让趋势图已保存")
+        print("  ✅ Annual transfer trend chart saved")
     
-    # （2）主体类型分布饼图
+    # (2) Entity Type Distribution Pie Chart
     if "转让人类型" in df.columns and "受让人类型" in df.columns:
         all_types = pd.concat([df["转让人类型"], df["受让人类型"]]).dropna()
-        type_counts = all_types.value_counts().head(8)  # 只显示前8个类型
+        type_counts = all_types.value_counts().head(8)
         plt.figure(figsize=(10, 8))
         plt.pie(type_counts.values, labels=type_counts.index, autopct="%1.1f%%", 
                 colors=plt.cm.GnBu(np.linspace(0.3, 0.8, len(type_counts))))
-        plt.title("转让主体类型分布（前8类）", fontdict=title_font)
+        plt.title("Entity Type Distribution (Top 8)", fontdict=title_font)
         plt.axis("equal")
         plt.tight_layout()
-        plt.savefig(os.path.join(vis_dir, "主体类型分布.png"), dpi=300)
+        plt.savefig(os.path.join(vis_dir, "entity_type_distribution.png"), dpi=300)
         plt.close()
-        print("  ✅ 主体类型分布饼图已保存")
+        print("  ✅ Entity type distribution pie chart saved")
     
-    # （3）转让次数分布直方图
+    # (3) Transfer Count Distribution Histogram
     if "转让次数" in df.columns:
         transfer_counts = df["转让次数"].dropna()
         plt.figure(figsize=(10, 6))
-        sns.histplot(transfer_counts[transfer_counts <= 10], bins=10, color="#3498db")  # 只显示≤10次的（避免异常值）
-        plt.title("专利转让次数分布（≤10次）", fontdict=title_font)
-        plt.xlabel("转让次数", fontdict=label_font)
-        plt.ylabel("专利数量", fontdict=label_font)
+        sns.histplot(transfer_counts[transfer_counts <= 10], bins=10, color="#3498db")
+        plt.title("Patent Transfer Count Distribution (≤10)", fontdict=title_font)
+        plt.xlabel("Transfer Count", fontdict=label_font)
+        plt.ylabel("Number of Patents", fontdict=label_font)
         plt.tight_layout()
-        plt.savefig(os.path.join(vis_dir, "转让次数分布.png"), dpi=300)
+        plt.savefig(os.path.join(vis_dir, "transfer_count_distribution.png"), dpi=300)
         plt.close()
-        print("  ✅ 转让次数分布图已保存")
+        print("  ✅ Transfer count distribution chart saved")
 
     print("\n=== 数据统计完成 ===")
     print(f"所有结果已保存至：{result_root}")

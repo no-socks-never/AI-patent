@@ -1,11 +1,22 @@
+import os
+# 设置matplotlib配置目录（解决权限问题）
+os.environ['MPLCONFIGDIR'] = os.path.join(os.getcwd(), '.matplotlib_cache')
+os.makedirs(os.environ['MPLCONFIGDIR'], exist_ok=True)
+
 import pandas as pd
 import networkx as nx
-import os
 import numpy as np
+import matplotlib
+matplotlib.use('Agg')  # 使用非交互式后端
 import matplotlib.pyplot as plt
 import seaborn as sns
 from tqdm import tqdm
-from matplotlib.font_manager import FontProperties
+import warnings
+
+# 导入跨平台字体配置
+import sys
+sys.path.insert(0, os.path.dirname(os.path.dirname(__file__)))
+from font_config import setup_chinese_fonts, get_font_dict
 
 # --------------------------
 # 配置参数
@@ -14,11 +25,11 @@ data_dir = "./data"  # 数据目录
 result_root = "./result/RQ2"  # 结果目录
 os.makedirs(result_root, exist_ok=True)  # 创建结果目录
 
-# 中文显示设置
-plt.rcParams["font.family"] = ["SimHei", "WenQuanYi Micro Hei", "Heiti TC"]
-plt.rcParams["axes.unicode_minus"] = False
-title_font = {"fontsize": 14, "fontweight": "bold"}
-label_font = {"fontsize": 12}
+# 自动配置中文字体（支持 Windows/macOS/Linux）
+setup_chinese_fonts()
+font_dicts = get_font_dict()
+title_font = font_dicts['title_font']
+label_font = font_dicts['label_font']
 
 
 # --------------------------
@@ -26,17 +37,41 @@ label_font = {"fontsize": 12}
 # --------------------------
 def load_and_clean_data():
     """加载原始数据并提取转让关系和主体类型"""
-    # 读取Excel文件
-    excel_path = os.path.join(data_dir, "AI_patent_data2001-2024.xlsx")
-    if not os.path.exists(excel_path):
-        raise FileNotFoundError(f"数据文件不存在：{excel_path}")
+    # 读取data目录下所有Excel文件
+    excel_files = [f for f in os.listdir(data_dir) if f.endswith('.xlsx') and not f.startswith('~$')]
+    if not excel_files:
+        raise FileNotFoundError(f"数据目录不存在Excel文件：{data_dir}")
     
-    # 读取数据（只保留需要的列）
+    print(f"发现{len(excel_files)}个Excel文件，开始合并...")
+    
+    # 需要的列
     cols_needed = [
         "专利名称", "申请号", "转让次数", "转让生效年份",
         "转让人", "转让人类型", "受让人", "受让人类型"
     ]
-    df = pd.read_excel(excel_path, usecols=cols_needed, engine="openpyxl")
+    
+    # 读取并合并所有Excel文件
+    dfs = []
+    for file in sorted(excel_files):
+        file_path = os.path.join(data_dir, file)
+        try:
+            # 先读取列名检查
+            temp_df = pd.read_excel(file_path, engine="openpyxl", nrows=0)
+            # 只读取存在的列
+            available_cols = [col for col in cols_needed if col in temp_df.columns]
+            temp_df = pd.read_excel(file_path, usecols=available_cols, engine="openpyxl")
+            dfs.append(temp_df)
+            print(f"  已读取：{file}，记录数：{len(temp_df)}")
+        except Exception as e:
+            print(f"  警告：文件{file}读取失败：{str(e)}")
+            continue
+    
+    if not dfs:
+        raise ValueError("没有成功读取任何Excel文件")
+    
+    # 合并所有数据
+    df = pd.concat(dfs, ignore_index=True)
+    print(f"成功合并所有文件，总记录数：{len(df)}")
     
     # 筛选有效转让记录
     valid_df = df[
@@ -175,33 +210,33 @@ def visualize_results(metrics_df, type_stats):
     line_colors = [cmap(0.2), cmap(0.4), cmap(0.6), cmap(0.8)]  # 4个指标的颜色
 
 
-    # 1. 主体类型数量分布（前10）
+    # 1. Entity Type Distribution (Top 10)
     plt.figure(figsize=(10, 6))
     ax = type_counts[:10].plot(kind="bar", color=bar_colors)
-    plt.title("主体类型数量分布（前10）", fontdict=title_font)
-    plt.xlabel("主体类型", fontdict=label_font)
-    plt.ylabel("数量", fontdict=label_font)
+    plt.title("Entity Type Distribution (Top 10)", fontdict=title_font)
+    plt.xlabel("Entity Type", fontdict=label_font)
+    plt.ylabel("Count", fontdict=label_font)
     plt.xticks(rotation=45)
-    ax.set_xticklabels(ax.get_xticklabels(), ha="right")  # 标签右对齐
+    ax.set_xticklabels(ax.get_xticklabels(), ha="right")
     
-    # 显示坐标轴具体数值（y轴）
+    # Display values on y-axis
     for p in ax.patches:
-        ax.annotate(f"{int(p.get_height())}",  # 显示数量
+        ax.annotate(f"{int(p.get_height())}",
                     (p.get_x() + p.get_width()/2., p.get_height()),
                     ha='center', va='bottom', fontsize=9)
     
     plt.tight_layout()
-    plt.savefig(os.path.join(vis_dir, "1_主体类型数量分布.png"), dpi=300)
+    plt.savefig(os.path.join(vis_dir, "1_entity_type_distribution.png"), dpi=300)
     plt.close()
 
 
-    # 2. 中心性指标箱线图（前10类型）
+    # 2. Centrality Metrics Boxplot (Top 10 Types)
     fig, axes = plt.subplots(2, 2, figsize=(16, 12))
     metrics = [
-        ("in_degree", "入度中心性（被转让活跃度）"),
-        ("out_degree", "出度中心性（主动转让活跃度）"),
-        ("betweenness", "中介中心性（资源控制能力）"),
-        ("eigenvector", "特征向量中心性（网络影响力）")
+        ("in_degree", "In-Degree Centrality (Transfer Receiver Activity)"),
+        ("out_degree", "Out-Degree Centrality (Transfer Sender Activity)"),
+        ("betweenness", "Betweenness Centrality (Resource Control)"),
+        ("eigenvector", "Eigenvector Centrality (Network Influence)")
     ]
     
     for i, (metric, title) in enumerate(metrics):
@@ -214,8 +249,8 @@ def visualize_results(metrics_df, type_stats):
             palette=bar_colors  # 应用青绿色系
         )
         axes[row, col].set_title(title, fontdict=title_font)
-        axes[row, col].set_xlabel("主体类型", fontdict=label_font)
-        axes[row, col].set_ylabel("指标值", fontdict=label_font)
+        axes[row, col].set_xlabel("Entity Type", fontdict=label_font)
+        axes[row, col].set_ylabel("Metric Value", fontdict=label_font)
         axes[row, col].tick_params(axis="x", rotation=45, labelsize=10)
         axes[row, col].set_xticklabels(axes[row, col].get_xticklabels(), ha="right")
         
@@ -225,11 +260,11 @@ def visualize_results(metrics_df, type_stats):
         ))
     
     plt.tight_layout()
-    plt.savefig(os.path.join(vis_dir, "2_中心性指标箱线图.png"), dpi=300)
+    plt.savefig(os.path.join(vis_dir, "2_centrality_boxplot.png"), dpi=300)
     plt.close()
 
 
-    # 3. 中心性均值柱状图（前10类型）
+    # 3. Average Centrality Bar Chart (Top 10 Types)
     plt.figure(figsize=(16, 10))
     ax = top10_stats[[
         "in_degree_mean", "out_degree_mean", 
@@ -241,12 +276,12 @@ def visualize_results(metrics_df, type_stats):
             "betweenness_std", "eigenvector_std"
         ]],
         capsize=5,
-        color=line_colors,  # 应用青绿色系（4个指标对应4种深浅）
+        color=line_colors,
         ax=plt.gca()
     )
-    plt.title("不同类型主体的中心性均值（前10类型）", fontdict=title_font)
-    plt.xlabel("主体类型", fontdict=label_font)
-    plt.ylabel("均值", fontdict=label_font)
+    plt.title("Average Centrality by Entity Type (Top 10)", fontdict=title_font)
+    plt.xlabel("Entity Type", fontdict=label_font)
+    plt.ylabel("Average Value", fontdict=label_font)
     plt.xticks(rotation=45, fontsize=10)
     ax.set_xticklabels(ax.get_xticklabels(), ha="right")
     
@@ -260,16 +295,16 @@ def visualize_results(metrics_df, type_stats):
         ax.bar_label(container, fmt="%.6f", fontsize=8, padding=3)
     
     plt.legend(
-        title="指标", 
-        labels=["入度中心性", "出度中心性", "中介中心性", "特征向量中心性"],
+        title="Metrics", 
+        labels=["In-Degree", "Out-Degree", "Betweenness", "Eigenvector"],
         bbox_to_anchor=(1.05, 1), 
         loc="upper left"
     )
     plt.tight_layout()
-    plt.savefig(os.path.join(vis_dir, "3_中心性均值柱状图.png"), dpi=300)
+    plt.savefig(os.path.join(vis_dir, "3_centrality_bar_chart.png"), dpi=300)
     plt.close()
     
-    print(f"\n可视化结果已保存至：{vis_dir}")
+    print(f"\nVisualization results saved to: {vis_dir}")
 
 # --------------------------
 # 主函数：执行完整流程
