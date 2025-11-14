@@ -3,10 +3,8 @@
 # 解决缺失值与稀疏网络问题
 # ============================
 
-pkg_path <- "D:/R/R-4.3.3/library"
-if (!dir.exists(pkg_path)) dir.create(pkg_path, recursive = TRUE)
-.libPaths(pkg_path)
-setwd("D:/AI_patent")
+# Mac系统使用默认的R库路径
+# 使用相对路径，不需要setwd
 
 result_root <- "./result/RQ3_geo_fixed"
 dir.create(result_root, recursive = TRUE, showWarnings = FALSE)
@@ -17,14 +15,65 @@ dir.create(plot_dir, recursive = TRUE, showWarnings = FALSE)
 # Step 1: 加载包
 # --------------------------
 cat("=== Step 1/5: 加载包 ===\n")
-install_if_missing <- function(pkg) {
-  if (!require(pkg, character.only = TRUE, quietly = TRUE)) {
-    install.packages(pkg, repos = "https://cloud.r-project.org/", lib = pkg_path)
-    library(pkg, character.only = TRUE)
+
+# 尝试加载包，如果失败则安装
+load_or_install <- function(pkg) {
+  success <- suppressWarnings(
+    require(pkg, character.only = TRUE, quietly = TRUE)
+  )
+  
+  if (!success) {
+    cat("安装包:", pkg, "\n")
+    tryCatch({
+      install.packages(pkg, repos = "https://cloud.r-project.org/", 
+                      dependencies = TRUE, quiet = FALSE)
+      library(pkg, character.only = TRUE)
+      cat("✓", pkg, "安装成功\n")
+    }, error = function(e) {
+      cat("✗ 错误: 无法安装", pkg, "\n")
+      cat("  请手动在R环境中运行: install.packages('", pkg, "')\n", sep="")
+      stop(paste("缺少必需的包:", pkg))
+    })
+  } else {
+    cat("✓", pkg, "已加载\n")
   }
 }
-required_packages <- c("readxl", "dplyr", "ergm", "network", "graphics")
-for (pkg in required_packages) install_if_missing(pkg)
+
+required_packages <- c("readxl", "dplyr", "network", "graphics")
+
+# 先加载不依赖ergm的包
+for (pkg in required_packages) {
+  load_or_install(pkg)
+}
+
+# 单独处理ergm，因为它可能有版本依赖问题
+cat("\n尝试加载ergm包...\n")
+ergm_loaded <- suppressWarnings(
+  require("ergm", quietly = TRUE)
+)
+
+if (!ergm_loaded) {
+  cat("⚠️  ergm包加载失败，尝试安装...\n")
+  tryCatch({
+    # 先更新依赖
+    install.packages(c("rlang", "cli", "lifecycle"), 
+                    repos = "https://cloud.r-project.org/",
+                    quiet = FALSE)
+    install.packages("ergm", repos = "https://cloud.r-project.org/",
+                    dependencies = TRUE, quiet = FALSE)
+    library("ergm")
+    cat("✓ ergm安装成功\n")
+  }, error = function(e) {
+    cat("\n")
+    cat(paste(rep("=", 70), collapse=""), "\n")
+    cat("❌ ergm包无法自动安装\n")
+    cat("请在新的R会话中手动运行:\n")
+    cat("  install.packages(c('rlang', 'cli', 'lifecycle', 'ergm'))\n")
+    cat("然后重启R并重新运行此脚本\n")
+    cat(paste(rep("=", 70), collapse=""), "\n")
+    stop("需要手动安装ergm")
+  })
+}
 `%||%` <- function(x, y) if (!is.null(x)) x else y
 
 # --------------------------
@@ -32,17 +81,56 @@ for (pkg in required_packages) install_if_missing(pkg)
 # --------------------------
 cat("\n=== Step 2/5: 数据预处理 ===\n")
 load_data <- function() {
-  excel_path <- file.path("./data", "AI_patent_data2001-2024.xlsx")
-  if (!file.exists(excel_path)) stop("数据文件不存在: ", excel_path)
+  # 读取并合并所有年份的Excel文件（Mac系统）
+  data_dir <- "./data"
+  excel_files <- list.files(data_dir, pattern = "\\.xlsx$", full.names = TRUE)
+  excel_files <- excel_files[!grepl("~\\$", excel_files)]  # 排除临时文件
   
-  df <- readxl::read_excel(excel_path)
+  if (length(excel_files) == 0) stop("数据目录不存在Excel文件: ", data_dir)
+  
+  cat("发现", length(excel_files), "个Excel文件，开始合并...\n")
+  
+  # 读取所有文件并标准化列名
+  df_list <- lapply(excel_files, function(file) {
+    cat("  读取:", basename(file), "\n")
+    temp_df <- readxl::read_excel(file)
+    
+    # 打印前几列名称用于调试
+    cat("    列数:", ncol(temp_df), "| 前5列:", 
+        paste(head(colnames(temp_df), 5), collapse=", "), "\n")
+    
+    # 尝试选取需要的列（按名称或位置）
+    needed_columns <- c("转让人", "受让人", "申请人地区", "受让人地址")
+    
+    if (all(needed_columns %in% colnames(temp_df))) {
+      # 如果列名完全匹配，直接选取
+      result <- temp_df[, needed_columns]
+    } else if (ncol(temp_df) >= 5) {
+      # 否则按位置选取前4列（假设是：转让人、受让人、申请人地区、受让人地址）
+      result <- temp_df[, c(1, 2, 4, 5)]
+      colnames(result) <- needed_columns
+    } else {
+      cat("    ⚠️  警告：文件列数不足，跳过\n")
+      return(NULL)
+    }
+    
+    return(result)
+  })
+  
+  # 移除NULL值
+  df_list <- df_list[!sapply(df_list, is.null)]
+  
+  # 使用bind_rows合并（更智能地处理列不匹配）
+  df <- dplyr::bind_rows(df_list)
+  cat("成功合并", length(df_list), "个文件，总记录数:", nrow(df), "\n")
+  
+  # 确保列名正确
   needed_columns <- c("转让人", "受让人", "申请人地区", "受让人地址")
-  if (all(needed_columns %in% colnames(df))) {
-    df <- df[, needed_columns]
-  } else {
-    df <- df[, c(1, 2, 4, 5)]
-    colnames(df) <- needed_columns
+  if (!all(needed_columns %in% colnames(df))) {
+    stop("合并后的数据缺少必需的列")
   }
+  
+  df <- df[, needed_columns]
   
   # 严格过滤：移除地址缺失的样本（核心修复）
   valid_df <- df %>%
@@ -103,9 +191,9 @@ province_pairs <- paste(df$转让人省份, df$受让人省份, sep = "→")
 top_pairs <- sort(table(province_pairs), decreasing = TRUE)[1:10]
 png(file.path(plot_dir, "geo_pairs.png"), width = 800, height = 600)
 par(mar = c(8, 4, 4, 2))
-barplot(top_pairs, las = 2, col = "lightblue", main = "高频省份转让对", ylab = "次数")
+barplot(top_pairs, las = 2, col = "lightblue", main = "Top Province Transfer Pairs", ylab = "Count")
 dev.off()
-cat("省份对分布图已保存至:", plot_dir, "\n")
+cat("Province pair distribution chart saved to:", plot_dir, "\n")
 
 # --------------------------
 # Step 4: 构建网络与协变量（处理缺失值）

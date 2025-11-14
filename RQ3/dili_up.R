@@ -2,10 +2,8 @@
 # 地理因素深入分析：比例计算与区域差异
 # ============================
 
-pkg_path <- "D:/R/R-4.3.3/library"
-if (!dir.exists(pkg_path)) dir.create(pkg_path, recursive = TRUE)
-.libPaths(pkg_path)
-setwd("D:/AI_patent")
+# Mac系统使用默认的R库路径
+# 使用相对路径，不需要setwd
 
 # 结果目录（独立于之前的结果）
 result_root <- "./result/RQ3_geo_detailed"
@@ -14,12 +12,17 @@ plot_dir <- file.path(result_root, "plots")
 dir.create(plot_dir, recursive = TRUE, showWarnings = FALSE)
 
 # --------------------------
-# Step 1: 加载包
+# Step 1: 加载包（修复版本冲突）
 # --------------------------
 cat("=== Step 1/6: 加载包 ===\n")
+
+# 强制更新关键依赖包以解决版本冲突
+cat("检查并更新关键依赖包...\n")
+update.packages(oldPkgs = c("rlang", "cli", "lifecycle"), ask = FALSE, repos = "https://cloud.r-project.org/")
+
 install_if_missing <- function(pkg) {
   if (!require(pkg, character.only = TRUE, quietly = TRUE)) {
-    install.packages(pkg, repos = "https://cloud.r-project.org/", lib = pkg_path)
+    install.packages(pkg, repos = "https://cloud.r-project.org/")
     library(pkg, character.only = TRUE)
   }
 }
@@ -32,17 +35,51 @@ for (pkg in required_packages) install_if_missing(pkg)
 # --------------------------
 cat("\n=== Step 2/6: 数据预处理 ===\n")
 load_data <- function() {
-  excel_path <- file.path("./data", "AI_patent_data2001-2024.xlsx")
-  if (!file.exists(excel_path)) stop("数据文件不存在: ", excel_path)
+  # 读取并合并所有年份的Excel文件（Mac系统）
+  data_dir <- "./data"
+  excel_files <- list.files(data_dir, pattern = "\\.xlsx$", full.names = TRUE)
+  excel_files <- excel_files[!grepl("~\\$", excel_files)]  # 排除临时文件
   
-  df <- readxl::read_excel(excel_path)
+  if (length(excel_files) == 0) stop("数据目录不存在Excel文件: ", data_dir)
+  
+  cat("发现", length(excel_files), "个Excel文件，开始合并...\n")
+  
+  # 读取所有文件并标准化列名
+  df_list <- lapply(excel_files, function(file) {
+    cat("  读取:", basename(file), "\n")
+    temp_df <- readxl::read_excel(file)
+    
+    cat("    列数:", ncol(temp_df), "| 前5列:", 
+        paste(head(colnames(temp_df), 5), collapse=", "), "\n")
+    
+    needed_columns <- c("转让人", "受让人", "申请人地区", "受让人地址")
+    
+    if (all(needed_columns %in% colnames(temp_df))) {
+      result <- temp_df[, needed_columns]
+    } else if (ncol(temp_df) >= 5) {
+      result <- temp_df[, c(1, 2, 4, 5)]
+      colnames(result) <- needed_columns
+    } else {
+      cat("    ⚠️  警告：文件列数不足，跳过\n")
+      return(NULL)
+    }
+    
+    return(result)
+  })
+  
+  # 移除NULL值
+  df_list <- df_list[!sapply(df_list, is.null)]
+  
+  # 使用bind_rows合并
+  df <- dplyr::bind_rows(df_list)
+  cat("成功合并", length(df_list), "个文件，总记录数:", nrow(df), "\n")
+  
   needed_columns <- c("转让人", "受让人", "申请人地区", "受让人地址")
-  if (all(needed_columns %in% colnames(df))) {
-    df <- df[, needed_columns]
-  } else {
-    df <- df[, c(1, 2, 4, 5)]  # 按位置取列
-    colnames(df) <- needed_columns
+  if (!all(needed_columns %in% colnames(df))) {
+    stop("合并后的数据缺少必需的列")
   }
+  
+  df <- df[, needed_columns]
   
   # 严格保留地址完整的样本（无缺失）
   valid_df <- df %>%
@@ -96,14 +133,14 @@ province_compare <- df %>%
 cat("排除地址缺失样本后的转让分布：\n")
 print(province_compare)
 
-# 可视化比例
+# Visualize proportions
 png(file.path(plot_dir, "same_province_ratio.png"), width = 600, height = 500)
 barplot(
   province_compare$比例,
-  names.arg = ifelse(province_compare$同省份, "同省份", "异省份"),
+  names.arg = ifelse(province_compare$同省份, "Same Province", "Different Province"),
   col = c("lightblue", "lightcoral"),
-  ylab = "比例（%）",
-  main = "排除地址缺失样本后的转让比例",
+  ylab = "Ratio (%)",
+  main = "Transfer Ratio After Excluding Missing Addresses",
   ylim = c(0, 100)
 )
 text(
@@ -113,7 +150,7 @@ text(
   cex = 1.2
 )
 dev.off()
-cat("同省份比例图已保存至:", plot_dir, "\n")
+cat("Same province ratio chart saved to:", plot_dir, "\n")
 
 # --------------------------
 # Step 4: 东部vs中西部区域划分
@@ -162,14 +199,14 @@ region_analysis <- df %>%
 cat("东部vs中西部的同省份转让比例：\n")
 print(region_analysis)
 
-# 可视化区域差异
+# Visualize regional differences
 png(file.path(plot_dir, "region_comparison.png"), width = 700, height = 600)
 barplot(
   region_analysis$同省份比例,
   names.arg = region_analysis$转让人区域,
   col = c("lightgreen", "orange"),
-  ylab = "同省份转让比例（%）",
-  main = "东部vs中西部的同省份转让比例差异",
+  ylab = "Same Province Transfer Ratio (%)",
+  main = "Same Province Transfer Ratio: East vs Midwest",
   ylim = c(0, max(region_analysis$同省份比例) + 10)
 )
 text(
@@ -179,7 +216,7 @@ text(
   cex = 1.2
 )
 dev.off()
-cat("区域差异对比图已保存至:", plot_dir, "\n")
+cat("Regional difference comparison chart saved to:", plot_dir, "\n")
 
 # --------------------------
 # Step 6: 区域分组ERGM模型（可选，验证统计显著性）

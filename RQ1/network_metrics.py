@@ -1,22 +1,33 @@
+import os
+# 设置matplotlib配置目录（解决权限问题）
+os.environ['MPLCONFIGDIR'] = os.path.join(os.getcwd(), '.matplotlib_cache')
+os.makedirs(os.environ['MPLCONFIGDIR'], exist_ok=True)
+
 import pandas as pd
 import networkx as nx
-import os
 from tqdm import tqdm
 import numpy as np
 import seaborn as sns
+import matplotlib
+matplotlib.use('Agg')  # 使用非交互式后端
 import matplotlib.pyplot as plt
+import warnings
 
-# 全局字体设置（解决中文显示问题）
-plt.rcParams["font.family"] = ["SimHei", "WenQuanYi Micro Hei", "Heiti TC"]
-plt.rcParams["axes.unicode_minus"] = False  # 解决负号显示异常
-plt.rcParams["font.size"] = 10
+# 导入跨平台字体配置
+import sys
+sys.path.insert(0, os.path.dirname(os.path.dirname(__file__)))
+from font_config import setup_chinese_fonts, get_font_dict
+
+# 自动配置中文字体（支持 Windows/macOS/Linux）
+setup_chinese_fonts()
+plt.rcParams['font.size'] = 10
 
 # 1. 数据加载与预处理
 def load_and_preprocess_data(data_dir):
     print(f"当前工作目录：{os.getcwd()}")
     print(f"数据读取路径：{os.path.abspath(data_dir)}")
     
-    excel_files = [f for f in os.listdir(data_dir) if f.endswith('.xlsx')]
+    excel_files = [f for f in os.listdir(data_dir) if f.endswith('.xlsx') and not f.startswith('~$')]
     if not excel_files:
         xls_files = [f for f in os.listdir(data_dir) if f.endswith('.xls')]
         if xls_files:
@@ -24,15 +35,25 @@ def load_and_preprocess_data(data_dir):
         else:
             raise ValueError(f"{data_dir}目录下未找到任何Excel文件（.xlsx）")
     
-    if len(excel_files) > 1:
-        print(f"警告：目录下存在多个Excel文件，将读取第一个：{excel_files[0]}")
-    file_path = os.path.join(data_dir, excel_files[0])
+    # 读取并合并所有Excel文件
+    print(f"发现{len(excel_files)}个Excel文件，开始合并...")
+    dfs = []
+    for file in sorted(excel_files):
+        file_path = os.path.join(data_dir, file)
+        try:
+            temp_df = pd.read_excel(file_path, engine='openpyxl')
+            dfs.append(temp_df)
+            print(f"  已读取：{file}，记录数：{len(temp_df)}")
+        except Exception as e:
+            print(f"  警告：文件{file}读取失败：{str(e)}")
+            continue
     
-    try:
-        df = pd.read_excel(file_path, engine='openpyxl')
-        print(f"成功读取文件：{os.path.basename(file_path)}，总记录数：{len(df)}")
-    except Exception as e:
-        raise ValueError(f"文件读取失败：{str(e)}")
+    if not dfs:
+        raise ValueError("没有成功读取任何Excel文件")
+    
+    # 合并所有数据
+    df = pd.concat(dfs, ignore_index=True)
+    print(f"成功合并所有文件，总记录数：{len(df)}")
     
     required_columns = ['转让次数', '转让人', '受让人', '转让生效日', '转让生效年份']
     missing_cols = [col for col in required_columns if col not in df.columns]
@@ -151,74 +172,74 @@ def visualize_trends(metrics_df, output_dir='./result/RQ1/trends'):
     os.makedirs(output_dir, exist_ok=True)
     print(f"\n📈 指标趋势图保存路径：{os.path.abspath(output_dir)}")
     
-    # 定义字体配置（解决FontProperties参数错误）
-    title_font = {'fontsize': 14, 'fontweight': 'bold', 'fontfamily': ["SimHei", "WenQuanYi Micro Hei"]}
-    label_font = {'fontsize': 12, 'fontfamily': ["SimHei", "WenQuanYi Micro Hei"]}
-    legend_font = {'size': 11, 'family': ["SimHei", "WenQuanYi Micro Hei"]}
+    # 定义字体配置（Mac系统适配）
+    title_font = {'fontsize': 14, 'fontweight': 'bold'}
+    label_font = {'fontsize': 12}
+    legend_font = {'size': 11}
     
     sns.set_style("whitegrid")
     sns.set_palette("tab10")
     fig_params = {'figsize': (10, 6), 'dpi': 300}
     
-    # 1. 网络规模
+    # 1. Network Size
     plt.figure(**fig_params)
-    sns.lineplot(data=metrics_df, x='year', y='n_nodes', marker='o', linewidth=2.5, label='节点数')
-    sns.lineplot(data=metrics_df, x='year', y='n_edges', marker='s', linewidth=2.5, label='边数')
-    plt.title('专利转让网络规模演化趋势', fontdict=title_font, pad=15)
-    plt.xlabel('年份', fontdict=label_font)
-    plt.ylabel('数量', fontdict=label_font)
+    sns.lineplot(data=metrics_df, x='year', y='n_nodes', marker='o', linewidth=2.5, label='Nodes')
+    sns.lineplot(data=metrics_df, x='year', y='n_edges', marker='s', linewidth=2.5, label='Edges')
+    plt.title('Patent Transfer Network Size Evolution', fontdict=title_font, pad=15)
+    plt.xlabel('Year', fontdict=label_font)
+    plt.ylabel('Count', fontdict=label_font)
     plt.legend(prop=legend_font)
     plt.xticks(metrics_df['year'], rotation=45)
     plt.tight_layout()
     plt.savefig(os.path.join(output_dir, 'network_size_trend.png'), facecolor='white')
     plt.close()
     
-    # 2. 网络密度
-    plt.figure(** fig_params)
+    # 2. Network Density
+    plt.figure(**fig_params)
     sns.lineplot(data=metrics_df, x='year', y='density', marker='^', linewidth=2.5, color='#2ecc71')
-    plt.title('专利转让网络密度演化趋势', fontdict=title_font, pad=15)
-    plt.xlabel('年份', fontdict=label_font)
-    plt.ylabel('密度值', fontdict=label_font)
+    plt.title('Patent Transfer Network Density Evolution', fontdict=title_font, pad=15)
+    plt.xlabel('Year', fontdict=label_font)
+    plt.ylabel('Density', fontdict=label_font)
     plt.xticks(metrics_df['year'], rotation=45)
     plt.tight_layout()
     plt.savefig(os.path.join(output_dir, 'network_density_trend.png'), facecolor='white')
     plt.close()
     
-    # 3. 平均聚类系数
+    # 3. Average Clustering Coefficient
     plt.figure(**fig_params)
     sns.lineplot(data=metrics_df, x='year', y='avg_clustering', marker='d', linewidth=2.5, color='#e74c3c')
-    plt.title('专利转让网络平均聚类系数演化趋势', fontdict=title_font, pad=15)
-    plt.xlabel('年份', fontdict=label_font)
-    plt.ylabel('聚类系数', fontdict=label_font)
+    plt.title('Average Clustering Coefficient Evolution', fontdict=title_font, pad=15)
+    plt.xlabel('Year', fontdict=label_font)
+    plt.ylabel('Clustering Coefficient', fontdict=label_font)
     plt.xticks(metrics_df['year'], rotation=45)
     plt.tight_layout()
     plt.savefig(os.path.join(output_dir, 'network_clustering_trend.png'), facecolor='white')
     plt.close()
     
-    # 4. 平均路径长度
-    plt.figure(** fig_params)
+    # 4. Average Path Length
+    plt.figure(**fig_params)
     sns.lineplot(data=metrics_df, x='year', y='avg_path_length', marker='*', linewidth=2.5, color='#9b59b6')
-    plt.title('专利转让网络平均路径长度演化趋势', fontdict=title_font, pad=15)
-    plt.xlabel('年份', fontdict=label_font)
-    plt.ylabel('路径长度', fontdict=label_font)
+    plt.title('Average Path Length Evolution', fontdict=title_font, pad=15)
+    plt.xlabel('Year', fontdict=label_font)
+    plt.ylabel('Path Length', fontdict=label_font)
     plt.xticks(metrics_df['year'], rotation=45)
     plt.tight_layout()
     plt.savefig(os.path.join(output_dir, 'network_path_length_trend.png'), facecolor='white')
     plt.close()
     
-    # 5. 模块度
+    # 5. Modularity
     if 'modularity' in metrics_df.columns and not metrics_df['modularity'].isna().all():
         plt.figure(**fig_params)
         sns.lineplot(data=metrics_df, x='year', y='modularity', marker='p', linewidth=2.5, color='#f39c12')
-        plt.title('专利转让网络模块度演化趋势', fontdict=title_font, pad=15)
-        plt.xlabel('年份', fontdict=label_font)
-        plt.ylabel('模块度值', fontdict=label_font)
+        plt.title('Network Modularity Evolution', fontdict=title_font, pad=15)
+        plt.xlabel('Year', fontdict=label_font)
+        plt.ylabel('Modularity', fontdict=label_font)
         plt.xticks(metrics_df['year'], rotation=45)
         plt.tight_layout()
         plt.savefig(os.path.join(output_dir, 'network_modularity_trend.png'), facecolor='white')
         plt.close()
     
-    print("✅ 所有指标趋势图保存完成")
+    print("✅ All trend charts saved")
 
 # 主函数
 def main():

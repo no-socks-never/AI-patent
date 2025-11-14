@@ -1,23 +1,32 @@
+import os
+import warnings
+warnings.filterwarnings('ignore')
+
+# 设置matplotlib配置目录（解决权限问题）
+os.environ['MPLCONFIGDIR'] = os.path.join(os.getcwd(), '.matplotlib_cache')
+os.makedirs(os.environ['MPLCONFIGDIR'], exist_ok=True)
+
 import pandas as pd
 import numpy as np
 import networkx as nx
 from sklearn.preprocessing import StandardScaler
 from sklearn.linear_model import PoissonRegressor
 from sklearn.metrics import r2_score
+import matplotlib
+matplotlib.use('Agg')  # 使用非交互式后端
 import matplotlib.pyplot as plt
 import seaborn as sns
-import os
-import warnings
-warnings.filterwarnings('ignore')
+
+# 导入跨平台字体配置
+import sys
+sys.path.insert(0, os.path.dirname(os.path.dirname(__file__)))
+from font_config import setup_chinese_fonts, get_font_dict
 
 # --------------------------
-# 1. 全局设置（彻底解决中文+编码问题）
+# 1. 全局设置（跨平台兼容）
 # --------------------------
-os.chdir("D:/AI_patent")  # 你的工作目录
-
-# 中文显示适配
-plt.rcParams['font.sans-serif'] = ['SimHei']  # 黑体
-plt.rcParams['axes.unicode_minus'] = False  # 正常显示负号
+# 自动配置中文字体（支持 Windows/macOS/Linux）
+setup_chinese_fonts()
 
 # 创建结果目录
 result_root = "./result/RQ4"
@@ -29,9 +38,32 @@ os.makedirs(fig_dir, exist_ok=True)
 # 2. 数据加载与精简
 # --------------------------
 def load_and_preprocess_data():
-    # 读取Excel数据
-    excel_path = "./data/AI_patent_data2001-2024.xlsx"
-    df = pd.read_excel(excel_path)
+    # 读取data目录下所有Excel文件
+    data_dir = "./data"
+    excel_files = [f for f in os.listdir(data_dir) if f.endswith('.xlsx') and not f.startswith('~$')]
+    if not excel_files:
+        raise FileNotFoundError(f"数据目录不存在Excel文件：{data_dir}")
+    
+    print(f"发现{len(excel_files)}个Excel文件，开始合并...")
+    
+    # 读取并合并所有Excel文件
+    dfs = []
+    for file in sorted(excel_files):
+        file_path = os.path.join(data_dir, file)
+        try:
+            temp_df = pd.read_excel(file_path, engine='openpyxl')
+            dfs.append(temp_df)
+            print(f"  已读取：{file}，记录数：{len(temp_df)}")
+        except Exception as e:
+            print(f"  警告：文件{file}读取失败：{str(e)}")
+            continue
+    
+    if not dfs:
+        raise ValueError("没有成功读取任何Excel文件")
+    
+    # 合并所有数据
+    df = pd.concat(dfs, ignore_index=True)
+    print(f"成功合并所有文件，总记录数：{len(df)}")
     print(f"原始数据：{len(df)} 条记录")
     
     # 提取边数据（去重+去自环）
@@ -161,7 +193,7 @@ def exploratory_analysis(df):
     
     plt.figure(figsize=(10, 4))
     sns.heatmap(plot_corr, annot=True, cmap="coolwarm", fmt=".3f")
-    plt.title("网络位置与创新产出相关性")
+    plt.title("Network Position vs Innovation Output Correlation")
     plt.tight_layout()
     plt.savefig(os.path.join(fig_dir, "correlation_heatmap.png"), dpi=300)
     plt.close()
@@ -214,9 +246,9 @@ def visualize_results(coefficients):
     plt.figure(figsize=(10, 6))
     sns.barplot(x="变量", y="泊松回归系数", data=centrality_coef, palette="coolwarm")
     plt.axhline(y=0, color="black", linestyle="--")
-    plt.title("网络位置对创新产出的影响系数")
-    plt.xlabel("网络位置指标")
-    plt.ylabel("泊松回归系数")
+    plt.title("Impact of Network Position on Innovation Output")
+    plt.xlabel("Network Position Metrics")
+    plt.ylabel("Poisson Regression Coefficient")
     plt.xticks(rotation=45)
     plt.tight_layout()
     plt.savefig(os.path.join(fig_dir, "centrality_coefficients.png"), dpi=300)
