@@ -1,0 +1,21 @@
+=== 2018-2024（爆发期） 地理邻近性ERGM模型结果（筛选后数据） ===
+
+Call:
+ergm::ergm(formula = formula_simple, eval.loglik = FALSE, control = ergm::control.ergm(MCMC.burnin = 2000, 
+    MCMC.interval = 200, MCMC.samplesize = 300, seed = 123, init.method = "CD"))
+
+Monte Carlo Maximum Likelihood Results:
+
+                 Estimate Std. Error MCMC % z value Pr(>|z|)    
+edges             -4.7837     0.2201      0 -21.734  < 1e-04 ***
+edgecov.geo_prox   0.9088     0.3706      0   2.452  0.01421 *  
+mutual             2.6975     0.8206      0   3.287  0.00101 ** 
+---
+Signif. codes:  0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘.’ 0.1 ‘ ’ 1
+
+
+模型公式： net ~ edges + edgecov("geo_prox") + mutual 
+样本量：126782 条
+网络规模：51 节点，29 边
+同省份转让比例：0.276
+数据说明：使用筛选后的数据（度>=2的节点）

@@ -1,0 +1,27 @@
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.pyc
+
+# Mac
+.DS_Store
+
+# Matplotlib cache
+.matplotlib_cache/
+
+# Test files
+font_test.png
+
+# R
+.Rhistory
+.RData
+.Ruserdata
+
+# IDE
+.vscode/
+.idea/
+
+
+
+

@@ -1,0 +1,22 @@
+=== 2001-2010（萌芽期） 地理邻近性ERGM模型结果（筛选后数据） ===
+
+Call:
+ergm::ergm(formula = formula, eval.loglik = FALSE, control = ergm::control.ergm(MCMC.burnin = 3000, 
+    MCMC.interval = 300, MCMC.samplesize = 500, seed = 123, init.method = "CD"))
+
+Monte Carlo Maximum Likelihood Results:
+
+                     Estimate Std. Error MCMC % z value Pr(>|z|)    
+edges                -6.66800    0.07659      0 -87.056  < 1e-04 ***
+edgecov.geo_prox      0.52783    0.15579      0   3.388 0.000704 ***
+mutual                4.16062    0.33753      0  12.327  < 1e-04 ***
+gwesp.OTP.fixed.0.25  1.05451    0.71021      0   1.485 0.137597    
+---
+Signif. codes:  0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘.’ 0.1 ‘ ’ 1
+
+
+模型公式： net ~ edges + edgecov("geo_prox") + mutual + gwesp(0.25, fixed = TRUE) 
+样本量：1021 条
+网络规模：389 节点，230 边
+同省份转让比例：0.213
+数据说明：使用筛选后的数据（度>=2的节点）

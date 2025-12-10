@@ -1,0 +1,20 @@
+=== 2011-2017（发展期） 技术相似度ERGM模型结果（筛选后数据） ===
+
+Call:
+ergm::ergm(formula = formula_simple, eval.loglik = FALSE, control = ergm::control.ergm(MCMC.burnin = 2000, 
+    MCMC.interval = 200, MCMC.samplesize = 300, seed = 123, init.method = "CD"))
+
+Monte Carlo Maximum Likelihood Results:
+
+                 Estimate Std. Error MCMC % z value Pr(>|z|)    
+edges             -6.0023     0.1345      0 -44.611  < 1e-04 ***
+edgecov.tech_sim   1.2761     0.4268      0   2.990  0.00279 ** 
+mutual             3.3988     0.3729      0   9.115  < 1e-04 ***
+---
+Signif. codes:  0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘.’ 0.1 ‘ ’ 1
+
+
+模型公式： net ~ edges + edgecov("tech_sim") + mutual 
+样本量：66687 条
+网络规模：242 节点，216 边
+数据说明：使用筛选后的数据（度>=2的节点）
